@@ -26,7 +26,9 @@ import UIKit
 
 public protocol CropViewControllerDelegate: class {
     func cropViewControllerDidCrop(_ cropViewController: CropViewController,
-                                   cropped: UIImage, transformation: Transformation)
+                                   cropped: UIImage,
+                                   transformation: Transformation,
+                                   cropRectPoints: CropRectPoints)
     func cropViewControllerDidFailToCrop(_ cropViewController: CropViewController, original: UIImage)
     func cropViewControllerDidCancel(_ cropViewController: CropViewController, original: UIImage)
     func cropViewControllerWillDismiss(_ cropViewController: CropViewController)
@@ -78,7 +80,7 @@ public class CropViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-        
+    
     fileprivate func createCropToolbar() {
         cropToolbar.backgroundColor = .black
         
@@ -210,7 +212,7 @@ public class CropViewController: UIViewController {
             cropView.forceFixedRatio = false
         }
     }
-        
+    
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if case .presetInfo(let transformInfo) = config.presetTransformationType {
@@ -274,7 +276,11 @@ public class CropViewController: UIViewController {
         delegate?.cropViewControllerWillDismiss(self)
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
-            self.delegate?.cropViewControllerDidCrop(self, cropped: image, transformation: cropResult.transformation)
+            self.delegate?
+                .cropViewControllerDidCrop(self,
+                                           cropped: image,
+                                           transformation: cropResult.transformation,
+                                           cropRectPoints: cropResult.cropRectPoints)
         }
     }
 }
@@ -341,8 +347,11 @@ extension CropViewController {
             delegate?.cropViewControllerDidFailToCrop(self, original: cropView.image)
             return
         }
-
-        delegate?.cropViewControllerDidCrop(self, cropped: image, transformation: cropResult.transformation)
+        
+        delegate?.cropViewControllerDidCrop(self,
+                                            cropped: image,
+                                            transformation: cropResult.transformation,
+                                            cropRectPoints: cropResult.cropRectPoints)
     }
     
     public func process(_ image: UIImage) -> UIImage? {

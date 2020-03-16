@@ -24,6 +24,15 @@
 
 import UIKit
 
+public struct CropRectPoints {
+    var leftTop: CGPoint = .zero
+    var rightTop: CGPoint = .zero
+    var leftBottom: CGPoint = .zero
+    var rightBottom: CGPoint = .zero
+}
+
+public typealias CropResult = (croppedImage: UIImage?, transformation: Transformation, cropRectPoints: CropRectPoints)
+
 protocol CropViewDelegate: class {
     func cropViewDidBecomeResettable(_ cropView: CropView)
     func cropViewDidBecomeNonResettable(_ cropView: CropView)
@@ -485,7 +494,26 @@ extension CropView {
 
 // MARK: - internal API
 extension CropView {
-    func crop(_ image: UIImage) -> (croppedImage: UIImage?, transformation: Transformation) {
+    func getCropRectPoints() -> CropRectPoints {
+        let leftTopPoint = gridOverlayView.convert(gridOverlayView.bounds.origin, to: imageContainer)
+        
+        let rightTopPoint = gridOverlayView.convert(CGPoint(x: gridOverlayView.bounds.maxX, y: gridOverlayView.bounds.minY), to: imageContainer)
+        
+        let leftBottomPoint = gridOverlayView.convert(CGPoint(x: gridOverlayView.bounds.maxX, y: gridOverlayView.bounds.maxY), to: imageContainer)
+        
+        let rightBottomPoint = gridOverlayView.convert(CGPoint(x: gridOverlayView.bounds.minX, y: gridOverlayView.bounds.maxY), to: imageContainer)
+        
+        func transform(_ point: CGPoint) -> CGPoint {
+            return CGPoint(x: point.x / imageContainer.frame.width, y: point.y / imageContainer.frame.height)
+        }
+        
+        return CropRectPoints(leftTop: transform(leftTopPoint),
+                              rightTop: transform(rightTopPoint),
+                              leftBottom: transform(leftBottomPoint),
+                              rightBottom: transform(rightBottomPoint))
+    }
+    
+    func crop(_ image: UIImage) -> CropResult {
         let rect = imageContainer.convert(imageContainer.bounds,
                                           to: self)
         let point = rect.center
@@ -509,22 +537,24 @@ extension CropView {
             manualZoomed: manualZoomed
         )
         
+        let cropRectPoints = getCropRectPoints()
+        
         guard let croppedImage = image.getCroppedImage(byCropInfo: info) else {
-            return (nil, transfromation)
+            return (nil, transfromation, cropRectPoints)
         }
         
         switch cropShapeType {
         case .rect:
-            return (croppedImage, transfromation)
+            return (croppedImage, transfromation, cropRectPoints)
         case .ellipse:
-            return (croppedImage.ellipseMasked, transfromation)
+            return (croppedImage.ellipseMasked, transfromation, cropRectPoints)
         case .roundedRect(let radiusToShortSide):
             let radius = min(croppedImage.size.width, croppedImage.size.height) * radiusToShortSide
-            return (croppedImage.roundRect(radius), transfromation)
+            return (croppedImage.roundRect(radius), transfromation, cropRectPoints)
         }
     }
     
-    func crop() -> (croppedImage: UIImage?, transformation: Transformation) {
+    func crop() -> CropResult {
         return crop(image)
     }
         

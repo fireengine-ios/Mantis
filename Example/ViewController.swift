@@ -98,11 +98,13 @@ class ViewController: UIViewController, CropViewControllerDelegate {
             }
         }
     }
-    
-    
-    func cropViewControllerDidCrop(_ cropViewController: CropViewController, cropped: UIImage, transformation: Transformation) {
+        
+    func cropViewControllerDidCrop(_ cropViewController: CropViewController, cropped: UIImage, transformation: Transformation, cropRectPoints: CropRectPoints) {
         croppedImageView.image = cropped
+        print("transformation: \(transformation)")
+        print("cropRectPoints: \(cropRectPoints)")
     }
+
 }
 
 extension ViewController: ImagePickerDelegate {
