@@ -499,12 +499,12 @@ extension CropView {
         
         let rightTopPoint = gridOverlayView.convert(CGPoint(x: gridOverlayView.bounds.maxX, y: gridOverlayView.bounds.minY), to: imageContainer)
         
-        let leftBottomPoint = gridOverlayView.convert(CGPoint(x: gridOverlayView.bounds.maxX, y: gridOverlayView.bounds.maxY), to: imageContainer)
+        let leftBottomPoint = gridOverlayView.convert(CGPoint(x: gridOverlayView.bounds.minX, y: gridOverlayView.bounds.maxY), to: imageContainer)
         
-        let rightBottomPoint = gridOverlayView.convert(CGPoint(x: gridOverlayView.bounds.minX, y: gridOverlayView.bounds.maxY), to: imageContainer)
+        let rightBottomPoint = gridOverlayView.convert(CGPoint(x: gridOverlayView.bounds.maxX, y: gridOverlayView.bounds.maxY), to: imageContainer)
         
         func transform(_ point: CGPoint) -> CGPoint {
-            return CGPoint(x: point.x / imageContainer.frame.width, y: point.y / imageContainer.frame.height)
+            return CGPoint(x: point.x / imageContainer.bounds.width, y: point.y / imageContainer.bounds.height)
         }
         
         return CropRectPoints(leftTop: transform(leftTopPoint),
