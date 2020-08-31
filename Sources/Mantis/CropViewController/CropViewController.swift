@@ -374,3 +374,22 @@ extension CropViewController {
         return cropView.crop(image).croppedImage
     }
 }
+
+//Fireengine
+extension CropViewController {
+    public func manualRotate(rotateAngle: CGFloat) {
+        let angle = CGAngle(degrees: rotateAngle)
+        cropView.viewModel.setRotatingStatus(by: angle)
+    }
+
+
+    public func setRatio(_ ratio: Double?) {
+        if let ratio = ratio {
+            cropView.forceFixedRatio = true
+            setFixedRatio(ratio)
+        } else {
+            cropView.forceFixedRatio = false
+        }
+        cropView.rotationDial?.isHidden = true
+    }
+}
