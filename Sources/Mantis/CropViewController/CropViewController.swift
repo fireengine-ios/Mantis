@@ -379,9 +379,13 @@ extension CropViewController {
 extension CropViewController {
     public func manualRotate(rotateAngle: CGFloat) {
         let angle = CGAngle(degrees: rotateAngle)
-        cropView.viewModel.setRotatingStatus(by: angle)
+        if cropView.forceFixedRatio {
+            let newRadians = cropView.viewModel.getTotalRadias(by: angle.radians)
+            cropView.viewModel.setRotatingStatus(by: CGAngle(radians: newRadians))
+        } else {
+            cropView.viewModel.setRotatingStatus(by: angle)
+        }
     }
-
 
     public func setRatio(_ ratio: Double?) {
         if let ratio = ratio {
@@ -390,6 +394,5 @@ extension CropViewController {
         } else {
             cropView.forceFixedRatio = false
         }
-        cropView.rotationDial?.isHidden = true
     }
 }
