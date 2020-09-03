@@ -390,8 +390,10 @@ extension CropViewController {
     public func setRatio(_ ratio: Double?) {
         if let ratio = ratio {
             cropView.forceFixedRatio = true
+            cropView.aspectRatioLockEnabled = true
             setFixedRatio(ratio)
         } else {
+            cropView.aspectRatioLockEnabled = false
             cropView.forceFixedRatio = false
         }
     }
