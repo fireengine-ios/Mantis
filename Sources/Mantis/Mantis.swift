@@ -60,6 +60,8 @@ public typealias Transformation = (
 
 public typealias CropInfo = (translation: CGPoint, rotation: CGFloat, scale: CGFloat, cropSize: CGSize, imageViewSize: CGSize)
 
+public typealias CropResult = (croppedImage: UIImage?, transformation: Transformation, cropInfo: CropInfo)
+
 public enum PresetTransformationType {
     case none
     case presetInfo(info: Transformation)

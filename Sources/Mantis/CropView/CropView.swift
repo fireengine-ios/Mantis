@@ -538,7 +538,7 @@ extension CropView {
 
 // MARK: - internal API
 extension CropView {
-    func crop(_ image: UIImage) -> (croppedImage: UIImage?, transformation: Transformation) {
+    func crop(_ image: UIImage) -> CropResult {
         let rect = imageContainer.convert(imageContainer.bounds,
                                           to: self)
         let point = rect.center
@@ -566,21 +566,21 @@ extension CropView {
         )
         
         guard let croppedImage = image.getCroppedImage(byCropInfo: info) else {
-            return (nil, transfromation)
+            return (nil, transfromation, info)
         }
         
         switch cropShapeType {
         case .rect, .ellipse(maskOnly: true), .roundedRect(_, maskOnly: true):
-            return (croppedImage, transfromation)
+            return (croppedImage, transfromation, info)
         case .ellipse(maskOnly: false):
-            return (croppedImage.ellipseMasked, transfromation)
+            return (croppedImage.ellipseMasked, transfromation, info)
         case .roundedRect(let radiusToShortSide, maskOnly: false):
             let radius = min(croppedImage.size.width, croppedImage.size.height) * radiusToShortSide
-            return (croppedImage.roundRect(radius), transfromation)
+            return (croppedImage.roundRect(radius), transfromation, info)
         }
     }
     
-    func crop() -> (croppedImage: UIImage?, transformation: Transformation) {
+    func crop() -> CropResult {
         return crop(image)
     }
         
