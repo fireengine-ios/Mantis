@@ -386,14 +386,13 @@ extension CropViewController {
         }
     }
 
-    public func setRatio(_ ratio: Double?) {
-        if let ratio = ratio {
-            cropView.forceFixedRatio = true
-            cropView.aspectRatioLockEnabled = true
-            setFixedRatio(ratio)
-        } else {
+    public func setRatio(_ ratio: Double) {
+        if ratio == -1 {
+            cropView.viewModel.aspectRatio = -1
             cropView.aspectRatioLockEnabled = false
-            cropView.forceFixedRatio = false
+        } else {
+            setFixedRatio(ratio)
         }
+        cropView.viewModel.setBetweenOperationStatus()
     }
 }
