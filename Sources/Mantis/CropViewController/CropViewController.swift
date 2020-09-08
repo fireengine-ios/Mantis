@@ -138,6 +138,10 @@ public class CropViewController: UIViewController {
             initialLayout = true
             view.layoutIfNeeded()
             cropView.adaptForCropBox()
+            
+            if case .presetInfo(let transformInfo) = config.presetTransformationType {
+                cropView.transform(byTransformInfo: transformInfo)
+            }
         }
     }
     
@@ -204,13 +208,6 @@ public class CropViewController: UIViewController {
             cropView.forceFixedRatio = true
         } else {
             cropView.forceFixedRatio = false
-        }
-    }
-        
-    public override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if case .presetInfo(let transformInfo) = config.presetTransformationType {
-            cropView.transform(byTransformInfo: transformInfo)
         }
     }
     
