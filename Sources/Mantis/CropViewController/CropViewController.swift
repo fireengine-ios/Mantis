@@ -392,4 +392,8 @@ extension CropViewController {
         }
         cropView.viewModel.setBetweenOperationStatus()
     }
+    
+    public func updateImage(_ image: UIImage) {
+        cropView.image = image
+    }
 }
