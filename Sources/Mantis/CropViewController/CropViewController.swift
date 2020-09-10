@@ -396,4 +396,8 @@ extension CropViewController {
     public func updateImage(_ image: UIImage) {
         cropView.image = image
     }
+    
+    public func setTransformation(_ transformation: Transformation) {
+        cropView.transform(byTransformInfo: transformation)
+    }
 }
