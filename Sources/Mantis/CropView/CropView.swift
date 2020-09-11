@@ -559,7 +559,8 @@ extension CropView {
         
         let transfromation = Transformation(
             offset: scrollView.contentOffset,
-            rotation: totalRadians,
+            rotationTypeValue: viewModel.rotationType.rawValue,
+            rotation: viewModel.radians,
             scale: scrollView.zoomScale,
             manualZoomed: manualZoomed,
             maskFrame: gridOverlayView.frame
@@ -711,6 +712,7 @@ extension CropView {
     }
     
     func transform(byTransformInfo transformation: Transformation) {
+        viewModel.rotationType = ImageRotationType(rawValue: transformation.rotationTypeValue) ?? .none
         viewModel.setRotatingStatus(by: CGAngle(radians:transformation.rotation))
         manualZoomed = transformation.manualZoomed
         scrollView.zoomScale = transformation.scale

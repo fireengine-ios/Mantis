@@ -52,6 +52,7 @@ public func getCroppedImage(byCropInfo info: CropInfo, andImage image: UIImage) 
 
 public typealias Transformation = (
     offset: CGPoint,
+    rotationTypeValue: CGFloat,
     rotation: CGFloat,
     scale: CGFloat,
     manualZoomed: Bool,

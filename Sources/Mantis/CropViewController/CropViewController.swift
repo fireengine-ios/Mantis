@@ -183,14 +183,14 @@ public class CropViewController: UIViewController {
         }
     }
     
-    func setFixedRatio(_ ratio: Double) {
+    func setFixedRatio(_ ratio: Double, animated: Bool = true) {
         cropToolbar.handleFixedRatioSetted()
         cropView.aspectRatioLockEnabled = true
         
         if (cropView.viewModel.aspectRatio != CGFloat(ratio)) {
             cropView.viewModel.aspectRatio = CGFloat(ratio)
             
-            UIView.animate(withDuration: 0.5) {
+            UIView.animate(withDuration: animated ? 0.5 : 0) {
                 self.cropView.setFixedRatioCropBox()
             }
         }
@@ -375,20 +375,15 @@ extension CropViewController {
 extension CropViewController {
     public func manualRotate(rotateAngle: CGFloat) {
         let angle = CGAngle(degrees: rotateAngle)
-        if cropView.forceFixedRatio {
-            let newRadians = cropView.viewModel.getTotalRadias(by: angle.radians)
-            cropView.viewModel.setRotatingStatus(by: CGAngle(radians: newRadians))
-        } else {
-            cropView.viewModel.setRotatingStatus(by: angle)
-        }
+        cropView.viewModel.setRotatingStatus(by: angle)
     }
 
-    public func setRatio(_ ratio: Double) {
+    public func setRatio(_ ratio: Double, animated: Bool) {
         if ratio == -1 {
             cropView.viewModel.aspectRatio = -1
             cropView.aspectRatioLockEnabled = false
         } else {
-            setFixedRatio(ratio)
+            setFixedRatio(ratio, animated: animated)
         }
         cropView.viewModel.setBetweenOperationStatus()
     }
